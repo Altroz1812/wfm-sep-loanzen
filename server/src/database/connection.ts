@@ -1,22 +1,9 @@
 import { createClient } from '@supabase/supabase-js';
-import { Pool } from 'pg';
 import { config } from '../config';
 import { logger } from '../utils/logger';
 
 // Initialize Supabase client only if credentials are properly configured
 let supabase: any = null;
-
-// Initialize PostgreSQL connection pool
-export const pool = new Pool({
-  user: config.db.user,
-  host: config.db.host,
-  database: config.db.database,
-  password: config.db.password,
-  port: config.db.port,
-  max: 20,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
-});
 
 const initializeSupabase = () => {
   // Check if we have valid Supabase credentials
@@ -49,22 +36,63 @@ const initializeSupabase = () => {
 
 supabase = initializeSupabase();
 
+// Mock pool for StackBlitz environment (since Docker/PostgreSQL isn't available)
+export const pool = {
+  query: async (text: string, params?: any[]) => {
+    logger.warn('Mock database query (StackBlitz mode):', { text, params });
+    
+    // Return mock data based on query type
+    if (text.includes('SELECT NOW()')) {
+      return { rows: [{ now: new Date() }] };
+    }
+    
+    if (text.includes('FROM users') && text.includes('WHERE email')) {
+      // Mock user login query
+      const email = params?.[0];
+      if (email === 'admin@demo.com') {
+        return {
+          rows: [{
+            id: '550e8400-e29b-41d4-a716-446655440001',
+            tenant_id: '550e8400-e29b-41d4-a716-446655440000',
+            email: 'admin@demo.com',
+            password_hash: '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password123
+            name: 'System Admin',
+            role: 'Admin',
+            is_active: true,
+            tenants: {
+              id: '550e8400-e29b-41d4-a716-446655440000',
+              name: 'Demo Bank',
+              domain: 'demo.lendingbank.com',
+              is_active: true
+            }
+          }]
+        };
+      }
+    }
+    
+    // Default empty result
+    return { rows: [] };
+  },
+  connect: async () => ({
+    query: pool.query,
+    release: () => {}
+  }),
+  end: () => {}
+};
+
 export { supabase };
 
 export const connectDatabase = async (): Promise<void> => {
   try {
-    // Test PostgreSQL connection
-    const client = await pool.connect();
-    await client.query('SELECT NOW()');
-    client.release();
-    logger.info('PostgreSQL connection established');
-
+    logger.info('Running in StackBlitz mode - using mock database');
+    
     if (!supabase) {
-      logger.warn('Supabase not initialized. Running in mock mode.');
+      logger.warn('Supabase not initialized. Running in full mock mode.');
+      logger.info('To use real database, please set up Supabase credentials in server/.env');
       return;
     }
 
-    // Test connection by making a simple query
+    // Test Supabase connection
     const { data, error } = await supabase.from('tenants').select('count').limit(1);
     
     if (error) {
@@ -74,17 +102,15 @@ export const connectDatabase = async (): Promise<void> => {
     
     logger.info('Supabase connection established');
   } catch (error) {
-    logger.warn('Failed to connect to database:', error);
+    logger.warn('Database connection failed, running in mock mode:', error);
   }
 };
 
-// Graceful shutdown
+// Graceful shutdown (no-op in StackBlitz)
 process.on('SIGINT', () => {
-  pool.end();
-  logger.info('Supabase client closed');
+  logger.info('Database connections closed');
 });
 
 process.on('SIGTERM', () => {
-  pool.end();
-  logger.info('Supabase client closed');
+  logger.info('Database connections closed');
 });
