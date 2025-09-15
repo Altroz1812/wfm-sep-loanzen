@@ -1,0 +1,10 @@
+{"level":"warn","message":"Supabase credentials not configured. Running in mock mode.","service":"workflow-management-system","timestamp":"2025-09-14T15:29:27.719Z"}
+{"level":"warn","message":"Supabase not initialized. Running in mock mode.","service":"workflow-management-system","timestamp":"2025-09-14T15:29:29.652Z"}
+{"level":"info","message":"Database connected successfully","service":"workflow-management-system","timestamp":"2025-09-14T15:29:29.661Z"}
+{"level":"info","message":"Server running on port 3000","service":"workflow-management-system","timestamp":"2025-09-14T15:29:29.980Z"}
+{"level":"info","message":"API Documentation available at http://localhost:3000/api/docs","service":"workflow-management-system","timestamp":"2025-09-14T15:29:30.003Z"}
+{"level":"warn","message":"Supabase credentials not configured. Running in mock mode.","service":"workflow-management-system","timestamp":"2025-09-14T15:41:00.102Z"}
+{"level":"warn","message":"Supabase not initialized. Running in mock mode.","service":"workflow-management-system","timestamp":"2025-09-14T15:41:00.504Z"}
+{"level":"info","message":"Database connected successfully","service":"workflow-management-system","timestamp":"2025-09-14T15:41:00.505Z"}
+{"level":"info","message":"Server running on port 3000","service":"workflow-management-system","timestamp":"2025-09-14T15:41:00.690Z"}
+{"level":"info","message":"API Documentation available at http://localhost:3000/api/docs","service":"workflow-management-system","timestamp":"2025-09-14T15:41:00.692Z"}
