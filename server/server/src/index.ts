@@ -213,7 +213,7 @@ const startServer = async () => {
   try {
     // Connect to database
     await connectDatabase();
-    // logger.info('Database connected successfully');
+    logger.info('Database connected successfully');
 
     // Start server
     const PORT = config.port || 3000;

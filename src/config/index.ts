@@ -7,8 +7,8 @@ dotenvConfig({ path: path.resolve(__dirname, '../../.env') });
 export const config = {
   port: parseInt(process.env.PORT || '3000', 10),
   nodeEnv: process.env.NODE_ENV || 'development',
-
-  // Supabase configuration (used instead of direct PostgreSQL)
+  
+  // Supabase configuration
   supabase: {
     url: process.env.SUPABASE_URL || '',
     anonKey: process.env.SUPABASE_ANON_KEY || '',
@@ -31,6 +31,15 @@ export const config = {
   // CORS configuration
   cors: {
     origin: process.env.CORS_ORIGIN || true
+  },
+
+  // Database configuration
+  db: {
+    user: process.env.DB_USER || 'postgres',
+    host: process.env.DB_HOST || 'localhost',
+    database: process.env.DB_NAME || 'wfms',
+    password: process.env.DB_PASSWORD || 'password',
+    port: parseInt(process.env.DB_PORT || '5432', 10)
   },
 
   // AI service configuration
