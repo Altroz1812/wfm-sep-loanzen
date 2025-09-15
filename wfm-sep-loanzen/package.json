@@ -1,0 +1,22 @@
+{
+  "name": "workflow-management-system",
+  "version": "1.0.0",
+  "description": "AI-powered multi-tenant workflow management system for loan origination",
+  "scripts": {
+    "setup": "npm install && cd server && npm install && cd ../client && npm install && cd ..",
+    "dev": "npm run server:dev",
+    "server:dev": "cd server && npm run dev & echo $! > server.pid",
+    "client:dev": "if [ -d \"client\" ]; then cd client && npm run dev; else echo \"Client directory not found. This is a server-only setup.\"; fi",
+    "build": "npm run server:build && npm run client:build",
+    "server:build": "cd server && npm run build",
+    "client:build": "if [ -d \"client\" ]; then cd client && npm run build; else echo \"Client directory not found. Skipping client build.\"; fi",
+    "start": "concurrently \"npm run server:start\" \"npm run client:start\"",
+    "server:start": "cd server && npm start",
+    "client:start": "if [ -d \"client\" ]; then cd client && npm start; else echo \"Client directory not found. This is a server-only setup.\"; fi",
+    "test": "cd server && npm test",
+    "db:seed": "cd server && npm run db:seed"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
